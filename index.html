@@ -1,0 +1,297 @@
+<!-- @format -->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+    <title></title>
+    <style>
+        body {
+            background-color: rgb(184, 171, 171);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col col-sm-6 offset-3 mt-3">
+                <div class="card" id="userForm">
+                    <div class="card-header">
+                        <h3>Task maker</h3>
+                    </div>
+                    <div class="card-body">
+                        <input class="form-control" id="input1" type="text" placeholder="Enter Your Name" data-error-msg="Please Enter Task" /><br />
+                        <small id="taskError" class="invalid-feedback"></small>
+                        <input class="form-control" id="input2" type="textarea" placeholder="Enter Discription" data-error-msg="Please Enter Discription" /><br />
+                        <small id="discriptionError" class="invalid-feedback"></small>
+                        <select class="form-control" name="" id="priority" data-error-msg="Please Choose Priority">
+                <option value="nun">Choose priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option></select
+              ><br />
+              <small id="priorityError" class="invalid-feedback"></small>
+              <button
+                type="submit"
+                name=""
+                id="addTask"
+                class="btn btn-primary btn-block"
+              >
+                Add Todo
+              </button>
+              <button
+                class="btn btn-dark text-light btn-block"
+                onclick=" randon()"
+              >
+                Random Task
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="output"></div>
+    <!-- ******************************************************* -->
+
+    <div class="modal fade" id="demo">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">Edit your task</div>
+          <div class="modal-body">
+            <input type="hidden" id="ind" class="form-control" />
+
+            <br />
+            <input type="text" id="task1" class="form-control" />
+            <br />
+            <textarea
+              name=""
+              id="disc1"
+              class="col col-sm-12 col-lg-12"
+              placeholder=" Enter task information"
+            >
+            </textarea>
+            <select id="prio1" class="form-control">
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="infoTask" onclick="update()">
+              Save change
+            </button>
+                        <button class="btn btn-outline-dark" data-dismiss="modal" id="">
+              Close
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- *******************Delete Modal**************** -->
+        <div class="modal" tabindex="-1" role="dialog" id="delete">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are You Shure</p>
+                        <br />
+                        <input type="text" class="form-control" id="ind2" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="deleteAll()">
+              Yes
+            </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+              No
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <script src="todoError.js"></script>
+        <script>
+            var card = 0;
+            add = document.getElementById("addTask");
+            let arr = [];
+            var userTask = document.querySelector("#input1");
+            var userDiscription = document.querySelector("#input2");
+            var userPriority = document.querySelector("#priority");
+
+            var userclass = "";
+            add.addEventListener("click", function() {
+                if (
+                    requiredError(userTask, "taskError", "enter a task") ||
+                    requiredError(
+                        userDiscription,
+                        "discriptionError",
+                        "enter a discription"
+                    ) ||
+                    requiredError(userPriority, "priorityError", "choose a priority")
+                ) {} else {
+                    var task = document.getElementById("input1").value;
+                    var discription = document.getElementById("input2").value;
+                    var level = document.getElementById("priority").value;
+                    let obj = {
+                        tk: task,
+                        dis: discription,
+                        prio: level,
+                        myclass: userclass,
+                    };
+                    arr.push(obj);
+                    display();
+                    clearForm();
+                }
+            });
+
+            function showmodel(ide) {
+                $("#demo").modal("show");
+
+                var random1 = arr[ide].tk;
+                var random2 = arr[ide].dis;
+                var random3 = arr[ide].prio;
+                var random4 = arr[ide].myclass;
+
+                document.getElementById("task1").value = random1;
+                document.getElementById("disc1").value = random2;
+                document.getElementById("prio1").value = random3;
+                document.getElementById("ind").value = ide;
+            }
+
+            function update() {
+                $("#demo").modal("hide");
+                var a = document.getElementById("task1").value;
+                var b = document.getElementById("disc1").value;
+                var c = document.getElementById("prio1").value;
+                var d = document.getElementById("ind").value;
+
+                arr[d].tk = a;
+                arr[d].dis = b;
+                arr[d].prio = c;
+                console.log(arr);
+                updateAll();
+            }
+
+            function updateAll() {
+                var userclass = "";
+                var task = document.getElementById("task1").value;
+                var discription = document.getElementById("disc1").value;
+                var level = document.getElementById("prio1").value;
+
+                display();
+            }
+
+            function display() {
+                document.getElementById("output").innerHTML = "";
+                var userclass = "";
+
+                for (let index = 0; index < arr.length; index++) {
+                    switch (arr[index].prio) {
+                        case "High":
+                            userclass = "border border-danger";
+                            break;
+                        case "Medium":
+                            userclass = "border border-warning";
+                            break;
+                        case "Low":
+                            userclass = "border border-success";
+                            break;
+                    }
+                    let str = `<div class="container-fluid" >
+                  <div class="row">
+                      <div class="col col-sm-6 offset-3 mt-2">
+              <div class="accordion" id="acc">
+                  <div class="card border ${userclass}" >
+                      <div class="card-header" data-toggle="collapse" data-target="#card${card}" >
+                          ${arr[index].tk}
+                          <div class="float-right">
+            <span id="pen">
+              <i class="fas fa-pencil-alt" onclick="showmodel(${index})" ></i>
+              <i class="fas fa-trash-alt" onclick="clearData(${index})"></i>
+              <i class="fas fa-check"></i>
+            </span>
+          </div>
+                      </div>
+                      <div class="collapse" data-parent="#acc" id="card${card}">
+                      <div class="card-body">
+                          ${arr[index].dis}
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+          </div>`;
+                    card++;
+                    document.getElementById("output").innerHTML += str;
+                }
+            }
+
+            function clearData(idxno) {
+                $("#delete").modal("show");
+                document.getElementById("ind2").value = idxno;
+            }
+
+            function deleteAll() {
+                var indexNo = document.getElementById("ind2").value;
+                // arr.pop(indexNo);
+                var z = +indexNo;
+                console.log(typeof z);
+
+                arr.splice(z, 1);
+                display();
+            }
+
+            function clearForm() {
+                document.getElementById("input1").value = "";
+                document.getElementById("input2").value = "";
+                document.getElementById("priority").value = "nun";
+            }
+
+            // ****************************************************
+            function randon() {
+                var randomTask = ["weak-up", "ready", "College", "Lunch", "Home"];
+                var randomDisc = [
+                    "At7.00",
+                    "At-9.00",
+                    "At-10.00",
+                    "At-1.00",
+                    "at-3.00",
+                ];
+                var randomPrio = ["High", "Low", "Medium"];
+
+                var addRandom = Math.floor(Math.random() * randomTask.length);
+                var prioRandom = Math.floor(Math.random() * randomPrio.length);
+
+                var x = (document.getElementById("input1").value =
+                    randomTask[addRandom]);
+                var y = (document.getElementById("input2").value =
+                    randomDisc[addRandom]);
+                var z = (document.getElementById("priority").value =
+                    randomPrio[prioRandom]);
+                display();
+            }
+        </script>
+</body>
+
+</html>
